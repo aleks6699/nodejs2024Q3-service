@@ -32,20 +32,24 @@ export class ArtistsService {
       throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
     }
 
-    if (!this.database.users.has(id)) {
+    if (!this.database.artist.has(id)) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    return this.database.users.get(id);
-  }x  
+    return this.database.artist.get(id);
+  }
 
 
-  update(id: number, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
+  update(id: string, updateArtistDto: UpdateArtistDto) {
+    if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
+    if (!this.database.artist.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
+    const artist = this.database.artist.get(id);
+    artist.name = updateArtistDto.name;
+    artist.grammy = updateArtistDto.grammy;  
+    return artist;
   }
 
   remove(id: string) {
     if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
-
     if (!this.database.artist.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
     return this.database.artist.delete(id);
   }

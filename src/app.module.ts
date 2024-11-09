@@ -2,19 +2,20 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { TracksModule } from './tracks/tracks.module';
 import { AlbumsModule } from './albums/albums.module';
 import { ArtistsModule } from './artists/artists.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { DatabaseService } from './database/database.service';
+import { TrackModule } from './track/track.module';
 
 @Module({
   imports: [
     UsersModule,
-    TracksModule,
+    TrackModule,
     AlbumsModule,
     ArtistsModule,
-    FavoritesModule,   
+    FavoritesModule,
+    TrackModule,   
   ],
   controllers: [AppController],
   providers: [AppService , DatabaseService],

@@ -57,12 +57,9 @@ export class UsersService {
 
     const user = this.database.users.get(id);
 
-
-
     user.password = newPassword;
     user.version += 1;
     user.updatedAt = Date.now();
-
     return user;
 
   }
