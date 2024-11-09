@@ -8,7 +8,9 @@ import 'dotenv/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const yamlDocument = yaml.load(fs.readFileSync('./doc/api.yaml', 'utf8')) as OpenAPIObject;
+  const yamlDocument = yaml.load(
+    fs.readFileSync('./doc/api.yaml', 'utf8'),
+  ) as OpenAPIObject;
   SwaggerModule.setup('doc', app, yamlDocument);
 
   await app.listen(process.env.PORT ?? 4000);
