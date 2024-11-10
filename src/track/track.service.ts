@@ -48,14 +48,23 @@ export class TrackService {
   }
 
   remove(id: string) {
-    if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
-    if (!this.database.track.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
-    const favIndex = this.database.favorites.tracks.indexOf(id);
-    if (favIndex > -1) {
-      this.database.favorites.tracks.splice(favIndex, 1);
+    if (!validate(id)) {
+        throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
+    }
+
+    const track = this.database.track.get(id);
+    if (!track) {
+        throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
+    }
+
+    const favoriteIndex = this.database.favorites.tracks.findIndex((favTrack) => favTrack.id === id);
+    if (favoriteIndex > -1) {
+        this.database.favorites.tracks.splice(favoriteIndex, 1);
     }
 
     this.database.track.delete(id);
+
     return null;
-  }
+}
+
 }

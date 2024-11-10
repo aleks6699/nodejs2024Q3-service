@@ -48,32 +48,38 @@ export class ArtistsService {
     return artist;
   }
 
+  // 
   remove(id: string) {
-    if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
-    if (!this.database.artist.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
-
-    const artist = this.database.artist.get(id);
-    
-    Array.from(this.database.album.values()).forEach((album) => {
-      if (album.artistId === artist.id) {
-        album.artistId = null;
-      }
-    });
-
-    Array.from(this.database.track.values()).forEach((track) => {
-      if (track.artistId === artist.id) {
-        track.artistId = null;
-      }
-    });
-    
-    const favIndex = this.database.favorites.artists.indexOf(id);
-    if (favIndex > -1) {
-      this.database.favorites.artists.splice(favIndex, 1);
+    if (!validate(id)) {
+        throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
     }
 
-    this.database.artist.delete(artist.id);
+    const artist = this.database.artist.get(id);
+    if (!artist) {
+        throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
+    }
+
+    this.database.album.forEach((album) => {
+        if (album.artistId === id) {
+            album.artistId = null;
+        }
+    });
+    this.database.track.forEach((track) => {
+        if (track.artistId === id) {
+            track.artistId = null;
+        }
+    });
+
+    const favoriteIndex = this.database.favorites.artists.findIndex((favArtist) => favArtist.id === id);
+    if (favoriteIndex > -1) {
+        this.database.favorites.artists.splice(favoriteIndex, 1);
+    }
+
+    this.database.artist.delete(id);
+
     return null;
-  }
+}
+
 }
 
 
