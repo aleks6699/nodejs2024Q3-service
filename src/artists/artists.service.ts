@@ -51,7 +51,28 @@ export class ArtistsService {
   remove(id: string) {
     if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
     if (!this.database.artist.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
-    return this.database.artist.delete(id);
+
+    const artist = this.database.artist.get(id);
+    
+    Array.from(this.database.album.values()).forEach((album) => {
+      if (album.artistId === artist.id) {
+        album.artistId = null;
+      }
+    });
+
+    Array.from(this.database.track.values()).forEach((track) => {
+      if (track.artistId === artist.id) {
+        track.artistId = null;
+      }
+    });
+    
+    const favIndex = this.database.favorites.artists.indexOf(id);
+    if (favIndex > -1) {
+      this.database.favorites.artists.splice(favIndex, 1);
+    }
+
+    this.database.artist.delete(artist.id);
+    return null;
   }
 }
 

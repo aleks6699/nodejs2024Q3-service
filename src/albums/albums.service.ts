@@ -8,11 +8,7 @@ import { Album } from './entities/album.entity';
 @Injectable()
 export class AlbumsService {
   constructor(private database: DatabaseService) { }
-  create(createAlbumDto: CreateAlbumDto) {
-    const { name, year, artistId } = createAlbumDto;
-    if (!name || !year || !artistId) {
-      throw new HttpException('Name, year and artistId are required', HttpStatus.BAD_REQUEST);
-    }
+  create(createAlbumDto: CreateAlbumDto) {   
     const album = new Album({
       ...createAlbumDto,
       id: v4(),
@@ -39,8 +35,8 @@ export class AlbumsService {
 
   update(id: string, updateAlbumDto: UpdateAlbumDto) {
     if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
-    if (!this.database.artist.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
-    const album = this.database.artist.get(id);
+    if (!this.database.album.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
+    const album = this.database.album.get(id);
     Object.keys(updateAlbumDto).forEach((param) => {
       album[param] = updateAlbumDto[param];
     });
@@ -51,7 +47,23 @@ export class AlbumsService {
   remove(id: string) {
     if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
     if (!this.database.album.has(id)) throw new HttpException('Album not found', HttpStatus.NOT_FOUND);
-    return this.database.album.delete(id);
+
+    const album = this.database.album.get(id);   
+
+    Array.from(this.database.track.values()).forEach((track) => {
+      if (track.albumId === album.id) {
+        track.albumId = null;
+      }
+    });
+  
+
+    const favIndex = this.database.favorites.albums.indexOf(id);
+    if (favIndex > -1) {
+      this.database.favorites.albums.splice(favIndex, 1);
+    }
+
+    this.database.album.delete(album.id);
+    return null;  
   }
 }
 

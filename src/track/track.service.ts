@@ -38,8 +38,8 @@ export class TrackService {
 
   update(id: string, updateTrackDto: UpdateTrackDto) {
     if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
-    if (!this.database.artist.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
-    const track = this.database.artist.get(id);
+    if (!this.database.track.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
+    const track = this.database.track.get(id);
     Object.keys(updateTrackDto).forEach((param) => {
       track[param] = updateTrackDto[param];
     });
@@ -50,6 +50,12 @@ export class TrackService {
   remove(id: string) {
     if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
     if (!this.database.track.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
-    return this.database.track.delete(id);
+    const favIndex = this.database.favorites.tracks.indexOf(id);
+    if (favIndex > -1) {
+      this.database.favorites.tracks.splice(favIndex, 1);
+    }
+
+    this.database.track.delete(id);
+    return null;
   }
 }
