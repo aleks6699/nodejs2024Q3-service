@@ -4,10 +4,10 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { v4, validate } from 'uuid';
 import { Album } from './entities/album.entity';
-
+import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class AlbumsService {
-  constructor(private database: DatabaseService) { }
+  constructor(private database: DatabaseService, private prisma: PrismaService) { }
   create(createAlbumDto: CreateAlbumDto) {   
     const album = new Album({
       ...createAlbumDto,
@@ -18,8 +18,13 @@ export class AlbumsService {
     return album;
   }
 
+  // findAll() {
+  //   return Array.from(this.database.album.values());
+  // }
+
   findAll() {
-    return Array.from(this.database.album.values());
+    console.log(this.prisma.album);
+    return this.prisma.album.findMany();
   }
 
   findOne(id: string) {
