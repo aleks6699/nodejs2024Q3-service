@@ -7,4 +7,5 @@ export class UpdatePasswordDto {
   @IsNotEmpty()
   @IsString()
   newPassword: string;
+  version: number;
 }

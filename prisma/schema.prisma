@@ -7,51 +7,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(uuid())
-  login     String
-  password  String
-  version   Int      @default(1)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+  model User {
+    id        String   @id @default(uuid())
+    login     String   @unique           // Уникальный логин для пользователя
+    password  String
+    version   Int      @default(1)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+  }
 
 model Artist {
-  id          String     @id @default(uuid())
-  name        String
-  grammy      Boolean
-  favoritesId String?
-  albums      Album[]
-  favorites   Favorites? @relation(fields: [favoritesId], references: [id])
-  tracks      Track[]
+  id        String   @id @default(uuid())
+  name      String   @unique
+  grammy    Boolean
+  albums    Album[]
+  tracks    Track[]
+  isFavorite Boolean @default(false)   // Поле для избранных артистов
 }
 
 model Album {
-  id          String     @id @default(uuid())
-  name        String
-  year        Int
-  artistId    String?
-  favoritesId String?
-  artist      Artist?    @relation(fields: [artistId], references: [id])
-  favorites   Favorites? @relation(fields: [favoritesId], references: [id])
-  tracks      Track[]
+  id        String   @id @default(uuid())
+  name      String
+  year      Int
+  artistId  String?
+  artist    Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  tracks    Track[]
+  isFavorite Boolean @default(false)   // Поле для избранных альбомов
 }
 
 model Track {
-  id          String     @id @default(uuid())
-  name        String
-  duration    Int
-  artistId    String?
-  albumId     String?
-  favoritesId String?
-  album       Album?     @relation(fields: [albumId], references: [id])
-  artist      Artist?    @relation(fields: [artistId], references: [id])
-  favorites   Favorites? @relation(fields: [favoritesId], references: [id])
-}
-
-model Favorites {
-  id      String   @id @default(uuid())
-  albums  Album[]
-  artists Artist[]
-  tracks  Track[]
+  id        String   @id @default(uuid())
+  name      String
+  duration  Int
+  artistId  String?
+  albumId   String?
+  artist    Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  album     Album?   @relation(fields: [albumId], references: [id], onDelete: SetNull)
+  isFavorite Boolean @default(false)   // Поле для избранных треков
 }

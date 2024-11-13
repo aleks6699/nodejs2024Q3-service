@@ -34,14 +34,14 @@ export class UsersController {
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  findAll() {    
-    return this.usersService.findAll();
+  async findAll() {
+    return await this.usersService.findAll();
   }
 
   @Get(':id')
   @UseInterceptors(ClassSerializerInterceptor)
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    return await this.usersService.findOne(id);
   }
 
   @Put(':id')
@@ -51,8 +51,8 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT) 
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string) {
+    return await this.usersService.remove(id);
   }
 }

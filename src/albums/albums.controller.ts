@@ -29,7 +29,7 @@ export class AlbumsController {
   }
 
   @Get()
-  findAll() {
+   findAll() {
     return this.albumsService.findAll();
   }
 

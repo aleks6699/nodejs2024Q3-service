@@ -12,11 +12,11 @@ import { PrismaService } from './prisma.service';
 @Module({
   imports: [
     UsersModule,
-    TrackModule,
-    AlbumsModule,
-    ArtistsModule,
-    FavoritesModule,
-    TrackModule,   
+    // TrackModule,
+    // AlbumsModule,
+    // ArtistsModule,
+    // FavoritesModule,
+    // TrackModule,   
   ],
   controllers: [AppController],
   providers: [AppService , DatabaseService, PrismaService ],
