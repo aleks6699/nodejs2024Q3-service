@@ -1,84 +1,71 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { validate, v4 } from 'uuid';
 import { Artist } from './entities/artist.entity';
+import { PrismaService } from 'src/prisma.service';
+import { check } from 'prettier';
+import { checkUUID } from 'src/utils/checkUUID';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ArtistsService {
-  constructor(private database: DatabaseService) { }
-  create(createArtistDto: CreateArtistDto) {
-    const { name, grammy } = createArtistDto;
-    if (!name || !grammy) {
-      throw new HttpException('Name and grammy are required', HttpStatus.BAD_REQUEST);
-    }
-    const artist = new Artist({
-      ...createArtistDto,
-      id: v4(),
-      name: name,
-      grammy: grammy
-    })
-    this.database.artist.set(artist.id, artist);
-    return artist;
+  constructor(private prisma: PrismaService) { }
 
+  async findAll() {
+    return await this.prisma.artist.findMany({
+      select: {
+        id: true,
+        name: true,
+        grammy: true,
+      },
+    });
   }
 
-  findAll() {
-    return Array.from(this.database.artist.values());
-  }
-  findOne(id: string) {
-    if (!validate(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
-    }
-
-    if (!this.database.artist.has(id)) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-    return this.database.artist.get(id);
-  }
-
-
-  update(id: string, updateArtistDto: UpdateArtistDto) {
-    if (!validate(id)) throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
-    if (!this.database.artist.has(id)) throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
-    const artist = this.database.artist.get(id);
-    artist.name = updateArtistDto.name;
-    artist.grammy = updateArtistDto.grammy;  
-    return artist;
-  }
-
-  // 
-  remove(id: string) {
-    if (!validate(id)) {
-        throw new HttpException('Invalid id', HttpStatus.BAD_REQUEST);
-    }
-
-    const artist = this.database.artist.get(id);
+  async findOne(id: string) {
+    checkUUID(id);
+    const artist = await this.prisma.artist.findUnique({
+      where: { id }, select: {
+        id: true,
+        name: true,
+        grammy: true,
+      },
+    });
     if (!artist) {
-        throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('Artist with this id does not exist');
     }
+    return artist;
+  }
 
-    this.database.album.forEach((album) => {
-        if (album.artistId === id) {
-            album.artistId = null;
-        }
-    });
-    this.database.track.forEach((track) => {
-        if (track.artistId === id) {
-            track.artistId = null;
-        }
+  async create(createArtistDto: CreateArtistDto) {
+    return await this.prisma.artist.create({
+      data: createArtistDto,
+      select: {
+        id: true,
+        name: true,
+        grammy: true,
+      }
     });
 
-    const favoriteIndex = this.database.favorites.artists.findIndex((favArtist) => favArtist.id === id);
-    if (favoriteIndex > -1) {
-        this.database.favorites.artists.splice(favoriteIndex, 1);
+  }
+
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
+    const artist = await this.findOne(id);
+    if (artist) {
+      return await this.prisma.artist.update({
+        where: { id },
+        data: updateArtistDto,
+      });
     }
+  }
 
-    this.database.artist.delete(id);
-
-    return null;
-}
+  async remove(id: string) {
+    const artist = await this.findOne(id);
+    if (artist) {
+      return await this.prisma.artist.delete({ where: { id } });
+    }
+  }
 
 }
 

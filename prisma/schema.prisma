@@ -18,7 +18,7 @@ datasource db {
 
 model Artist {
   id        String   @id @default(uuid())
-  name      String   @unique
+  name      String   
   grammy    Boolean
   albums    Album[]
   tracks    Track[]

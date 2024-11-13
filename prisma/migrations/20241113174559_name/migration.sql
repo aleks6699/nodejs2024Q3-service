@@ -43,12 +43,6 @@ CREATE TABLE "Track" (
     CONSTRAINT "Track_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "User_login_key" ON "User"("login");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Artist_name_key" ON "Artist"("name");
-
 -- AddForeignKey
 ALTER TABLE "Album" ADD CONSTRAINT "Album_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
