@@ -54,7 +54,8 @@ describe('Users (e2e)', () => {
         .post(usersRoutes.create)
         .set(commonHeaders)
         .send(createUserDto);
-
+        
+        console.log(creationResponse.body);
       const { id } = creationResponse.body;
 
       expect(creationResponse.statusCode).toBe(StatusCodes.CREATED);
