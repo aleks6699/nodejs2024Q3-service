@@ -16,6 +16,7 @@ export class AlbumsService {
         id: v4(),
         name: createAlbumDto.name,
         year: createAlbumDto.year,
+        artistId: createAlbumDto.artistId
 
       }
     })

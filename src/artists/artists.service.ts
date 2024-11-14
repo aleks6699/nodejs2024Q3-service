@@ -1,13 +1,9 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { DatabaseService } from 'src/database/database.service';
-import { validate, v4 } from 'uuid';
-import { Artist } from './entities/artist.entity';
 import { PrismaService } from 'src/prisma.service';
-import { check } from 'prettier';
 import { checkUUID } from 'src/utils/checkUUID';
-import { plainToClass } from 'class-transformer';
+
 
 @Injectable()
 export class ArtistsService {
@@ -66,7 +62,6 @@ export class ArtistsService {
       return await this.prisma.artist.delete({ where: { id } });
     }
   }
-
 }
 
 

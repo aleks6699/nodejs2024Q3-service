@@ -20,17 +20,17 @@ export class FavoritesController {
   @Post('track/:id')
   @HttpCode(HttpStatus.CREATED)
   createTrack(@Param('id') id: string) {
-    return this.favoritesService.create("track", id);
+    return this.favoritesService.createTrack(id);
   }
   @Post('artist/:id')
   @HttpCode(HttpStatus.CREATED)
   createArtist(@Param('id') id: string) {
-    return this.favoritesService.create("artist", id);
+    return this.favoritesService.createArtist(id);
   }
   @Post('album/:id')
   @HttpCode(HttpStatus.CREATED)
   createAlbum(@Param('id') id: string) {
-    return this.favoritesService.create("album", id);
+    return this.favoritesService.createAlbum(id);
   }
 
   @Get()
@@ -43,17 +43,17 @@ export class FavoritesController {
   @HttpCode(HttpStatus.NO_CONTENT)
 
   removeTrack(@Param('id') id: string) {
-    return this.favoritesService.remove("track", id);
+    return this.favoritesService.removeTrack(id);
   }
   @Delete('artist/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
 
   removeAtrist(@Param('id') id: string) {
-    return this.favoritesService.remove("artist", id);
+    return this.favoritesService.removeArtist(id);
   }
   @Delete('album/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return this.favoritesService.remove("album", id);
+    return this.favoritesService.removeAlbum(id);
   }
 }

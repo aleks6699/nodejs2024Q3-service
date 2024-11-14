@@ -7,6 +7,6 @@ import { PrismaService } from 'src/prisma.service';
 @Module({
   imports:[DatabaseModule],
   controllers: [FavoritesController],
-  providers: [FavoritesService,PrismaService],
+  providers: [FavoritesService, PrismaService],
 })
 export class FavoritesModule {}

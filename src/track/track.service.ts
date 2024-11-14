@@ -8,7 +8,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class TrackService {
-  constructor(private database: DatabaseService, private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) { }
   async create(createTrackDto: CreateTrackDto) {
 
     const track = await this.prisma.track.create({
@@ -86,5 +86,4 @@ export class TrackService {
       }
     })
   }
-
 }

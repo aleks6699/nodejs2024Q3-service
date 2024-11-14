@@ -15,7 +15,7 @@ import { PrismaService } from './prisma.service';
     TrackModule,
     AlbumsModule,
     ArtistsModule,
-    // FavoritesModule,
+    FavoritesModule,
     TrackModule,   
   ],
   controllers: [AppController],
