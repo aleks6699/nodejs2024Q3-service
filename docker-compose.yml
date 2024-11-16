@@ -3,7 +3,7 @@ version: '3.7'
 services:
   db:
     image: postgres:14
-    container_name: postgres
+    container_name: home-library-db
     env_file: .env
     restart: always
     ports:
@@ -26,7 +26,7 @@ services:
   app:
     build:
       context: .
-    container_name: app
+    container_name: home-library-app
     env_file: .env
     restart: always
     volumes:
@@ -44,7 +44,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "npx prisma generate && npm run start:dev"
+    command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run start:dev"
 
 volumes:
   postgres_data:
