@@ -20,7 +20,11 @@
     "test:watch": "jest --watch",
     "t": "jest --testMatch \"<rootDir>/*.spec.ts\" --verbose --runInBand",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "docker:start": "docker compose up -d",
+    "docker:stop": "docker compose down",
+    "docker:test": "docker scout cves aleks6699/rest-service:rest-service"
+
   },
   "dependencies": {
     "@nestjs/common": "^10.4.7",

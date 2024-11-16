@@ -1,10 +1,10 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
-import { validate } from "uuid";
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { validate } from 'uuid';
 
 export const checkUUID: checkUUID = (uuid: string) => {
   if (!validate(uuid)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
+    throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
   }
-}
+};
 
-type checkUUID = (uuid: string) => void
+type checkUUID = (uuid: string) => void;

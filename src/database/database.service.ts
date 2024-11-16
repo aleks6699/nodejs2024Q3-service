@@ -7,10 +7,9 @@ import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class DatabaseService {
-  users = new Map<string, User>()
-  artist = new Map<string, Artist>()
-  album = new Map<string, Album>()
-  track = new Map<string, Track>()
+  users = new Map<string, User>();
+  artist = new Map<string, Artist>();
+  album = new Map<string, Album>();
+  track = new Map<string, Track>();
   favorites = new Favorites();
-
 }

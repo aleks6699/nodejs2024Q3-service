@@ -3,9 +3,9 @@ import { Artist } from 'src/artists/entities/artist.entity';
 import { Track } from 'src/track/entities/track.entity';
 
 export class Favorites implements FavoritesResponse {
-  artists = []; 
-  albums = []; 
-  tracks = []; 
+  artists = [];
+  albums = [];
+  tracks = [];
 }
 
 export interface FavoritesResponse {
@@ -13,4 +13,3 @@ export interface FavoritesResponse {
   albums: Album[];
   tracks: Track[];
 }
-

@@ -1,13 +1,12 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { PrismaService } from 'src/prisma.service';
 import { checkUUID } from 'src/utils/checkUUID';
 
-
 @Injectable()
 export class ArtistsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async findAll() {
     return await this.prisma.artist.findMany({
@@ -22,7 +21,8 @@ export class ArtistsService {
   async findOne(id: string) {
     checkUUID(id);
     const artist = await this.prisma.artist.findUnique({
-      where: { id }, select: {
+      where: { id },
+      select: {
         id: true,
         name: true,
         grammy: true,
@@ -41,9 +41,8 @@ export class ArtistsService {
         id: true,
         name: true,
         grammy: true,
-      }
+      },
     });
-
   }
 
   async update(id: string, updateArtistDto: UpdateArtistDto) {
@@ -63,5 +62,3 @@ export class ArtistsService {
     }
   }
 }
-
-

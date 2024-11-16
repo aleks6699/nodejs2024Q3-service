@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpCode,
@@ -18,7 +17,6 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Controller('album')
 @UsePipes(new ValidationPipe())
-
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
 
@@ -29,7 +27,7 @@ export class AlbumsController {
   }
 
   @Get()
-   findAll() {
+  findAll() {
     return this.albumsService.findAll();
   }
 

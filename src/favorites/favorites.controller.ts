@@ -11,11 +11,10 @@ import {
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 
-
 @Controller('favs')
 @UsePipes(new ValidationPipe())
 export class FavoritesController {
-  constructor(private readonly favoritesService: FavoritesService) { }
+  constructor(private readonly favoritesService: FavoritesService) {}
 
   @Post('track/:id')
   @HttpCode(HttpStatus.CREATED)
@@ -41,13 +40,11 @@ export class FavoritesController {
 
   @Delete('track/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-
   removeTrack(@Param('id') id: string) {
     return this.favoritesService.removeTrack(id);
   }
   @Delete('artist/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-
   removeAtrist(@Param('id') id: string) {
     return this.favoritesService.removeArtist(id);
   }

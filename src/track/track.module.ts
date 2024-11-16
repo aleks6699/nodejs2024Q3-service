@@ -9,4 +9,4 @@ import { PrismaService } from 'src/prisma.service';
   controllers: [TrackController],
   providers: [TrackService, PrismaService],
 })
-export class TrackModule { }
+export class TrackModule {}

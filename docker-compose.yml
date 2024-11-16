@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:14
+    container_name: postgres
+    env_file: .env
+    restart: always
+    ports:
+      - "${PORT_BD}:${PORT_BD}"
+    networks:
+      - app_net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_logs:/var/log/postgresql
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+    container_name: app
+    env_file: .env
+    restart: always
+    volumes:
+      - node_modules:/app/node_modules
+      - logs_data:/app/logs
+      - type: bind
+        source: ./src
+        target: /app/src
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    networks:
+      - app_net
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "npx prisma generate && npm run start:dev"
+
+volumes:
+  postgres_data:
+  postgres_logs:
+  node_modules:
+  logs_data:
+
+networks:
+  app_net:
+    driver: bridge

@@ -3,13 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpStatus,
   ClassSerializerInterceptor,
   UseInterceptors,
-  HttpException,
   HttpCode,
   Put,
   UsePipes,
@@ -17,13 +15,12 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePasswordDto } from './dto/update-password';
 
 @Controller('user')
 @UsePipes(new ValidationPipe())
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @UseInterceptors(ClassSerializerInterceptor)
@@ -46,7 +43,10 @@ export class UsersController {
 
   @Put(':id')
   @UseInterceptors(ClassSerializerInterceptor)
-  update(@Param('id') id: string, @Body() updatePasswordDto: UpdatePasswordDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ) {
     return this.usersService.update(id, updatePasswordDto);
   }
 

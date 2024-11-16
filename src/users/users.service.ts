@@ -1,4 +1,8 @@
-import { BadRequestException, ForbiddenException, HttpCode, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UpdatePasswordDto } from './dto/update-password';
@@ -8,14 +12,14 @@ import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
-  constructor( private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
   async findAll() {
     const users = await this.prisma.user.findMany();
     return users.map((user) => plainToClass(User, user));
   }
 
-  async findOne(id: string) { 
-    checkUUID(id); 
+  async findOne(id: string) {
+    checkUUID(id);
 
     const user = await this.prisma.user.findUnique({
       where: { id },
@@ -35,11 +39,12 @@ export class UsersService {
         version: 1,
         createdAt: time,
         updatedAt: time,
-      }
+      },
     });
 
     return plainToClass(User, {
-      ...newUser, createdAt: newUser.createdAt.getTime(),
+      ...newUser,
+      createdAt: newUser.createdAt.getTime(),
       updatedAt: newUser.updatedAt.getTime(),
     });
   }
@@ -62,7 +67,11 @@ export class UsersService {
         },
       });
 
-      return plainToClass(User, { ...updatedUser, updatedAt: updatedUser.updatedAt.getTime(), createdAt: updatedUser.createdAt.getTime() });
+      return plainToClass(User, {
+        ...updatedUser,
+        updatedAt: updatedUser.updatedAt.getTime(),
+        createdAt: updatedUser.createdAt.getTime(),
+      });
     }
   }
 
@@ -75,4 +84,3 @@ export class UsersService {
     }
   }
 }
-
