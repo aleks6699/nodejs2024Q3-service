@@ -10,5 +10,4 @@ COPY . .
 
 EXPOSE 4000
 
-# Запускаем приложение
-CMD [ "npm", "star:dev" ]
+CMD ["sh", "-c", "npm run prisma:init && npm run start"]

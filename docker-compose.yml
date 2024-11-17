@@ -26,15 +26,12 @@ services:
   app:
     build:
       context: .
-    container_name: home-library-app
+    container_name: home-library-app   
     env_file: .env
     restart: always
     volumes:
       - node_modules:/app/node_modules
       - logs_data:/app/logs
-      - type: bind
-        source: ./src
-        target: /app/src
     ports:
       - "${PORT}:${PORT}"
     environment:
@@ -44,7 +41,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run start:dev"
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules          
 
 volumes:
   postgres_data:
