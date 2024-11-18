@@ -30,7 +30,8 @@ npm run docker:start
 You can test docker
 
 ```
-npm run docker:test
+npm run docker:test-app
+npm run docker:test-db
 
 
 
