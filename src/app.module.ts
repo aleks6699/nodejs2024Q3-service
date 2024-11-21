@@ -8,6 +8,9 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { DatabaseService } from './database/database.service';
 import { TrackModule } from './track/track.module';
 import { PrismaService } from './prisma.service';
+import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth/auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -17,8 +20,17 @@ import { PrismaService } from './prisma.service';
     ArtistsModule,
     FavoritesModule,
     TrackModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, DatabaseService, PrismaService],
+  providers: [
+    AppService,
+    DatabaseService,
+    PrismaService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}

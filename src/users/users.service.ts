@@ -13,6 +13,14 @@ import { plainToClass } from 'class-transformer';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
+
+  async findLoginOne(login: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { login },
+    });
+    return user;
+  }
+
   async findAll() {
     const users = await this.prisma.user.findMany();
     return users.map((user) => plainToClass(User, user));
