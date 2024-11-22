@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { Public } from './auth.guard';
+import { Public } from 'src/decorators/Public.decorators';
 
 @Controller('auth')
 @UsePipes(new ValidationPipe())
@@ -17,8 +17,9 @@ export class AuthController {
 
   @Post('signup')
   @Public()
+  @HttpCode(201)
   create(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signup(createUserDto);
+    return this.authService.signup(createUserDto.login, createUserDto.password);
   }
 
   @Post('login')
@@ -29,8 +30,10 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @Public()
   @HttpCode(200)
   refresh(@Body() { refreshToken }: { refreshToken: string }) {
+    console.log(refreshToken);
     return this.authService.refresh(refreshToken);
   }
 }
