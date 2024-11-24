@@ -1,4 +1,5 @@
 import { Injectable, LoggerService } from '@nestjs/common';
+import * as fs from 'fs';
 
 @Injectable()
 export class LoggingService implements LoggerService {
@@ -11,71 +12,86 @@ export class LoggingService implements LoggerService {
     VERBOSE: 5,
   };
 
-  private readonly currentLogLevel: number;
-
-  constructor() {
-    this.currentLogLevel = parseInt(process.env.LOG_LEVEL, 10) || 0;
-  }
+  private readonly currentLogLevel: number =
+    parseInt(process.env.LOG_LEVEL, 10) || 0;
+  private readonly sizeFileLogs: number =
+    parseInt(process.env.SIZE_FILE_LOGS, 10) || 0;
 
   private shouldLog(level: number): boolean {
     return level <= this.currentLogLevel;
   }
 
   log(message: any) {
-    console.log(this.currentLogLevel);
-    console.log(this.shouldLog(this.logLevelPriority.LOG));
     if (this.shouldLog(this.logLevelPriority.LOG)) {
       const messageLogs = `[LOG] ${message}`;
       this.writeLoggingMessageToConsole(messageLogs);
+      this.recordLog(messageLogs, 'log');
     }
   }
 
   fatal(message: any) {
-    console.log(this.shouldLog(this.logLevelPriority.LOG));
-
     if (this.shouldLog(this.logLevelPriority.FATAL)) {
       const messageLogs = `[FATAL] ${message}`;
       this.writeLoggingMessageToConsole(messageLogs);
+      this.recordLog(messageLogs, 'fatal');
     }
   }
 
   error(message: any) {
-    console.log(this.shouldLog(this.logLevelPriority.ERROR));
-
     if (this.shouldLog(this.logLevelPriority.ERROR)) {
       const messageLogs = `[ERROR] ${message}`;
       this.writeLoggingMessageToConsole(messageLogs);
+      this.recordLog(messageLogs, 'error');
     }
   }
 
   warn(message: any) {
-    console.log(this.shouldLog(this.logLevelPriority.WARN));
-
     if (this.shouldLog(this.logLevelPriority.WARN)) {
       const messageLogs = `[WARN] ${message}`;
       this.writeLoggingMessageToConsole(messageLogs);
+      this.recordLog(messageLogs, 'warn');
     }
   }
 
   debug(message: any) {
-    console.log(this.shouldLog(this.logLevelPriority.DEBUG));
-
     if (this.shouldLog(this.logLevelPriority.DEBUG)) {
       const messageLogs = `[DEBUG] ${message}`;
       this.writeLoggingMessageToConsole(messageLogs);
+      this.recordLog(messageLogs, 'debug');
     }
   }
 
   verbose(message: any) {
-    console.log(this.shouldLog(this.logLevelPriority.VERBOSE));
-
     if (this.shouldLog(this.logLevelPriority.VERBOSE)) {
       const messageLogs = `[VERBOSE] ${message}`;
       this.writeLoggingMessageToConsole(messageLogs);
+      this.recordLog(messageLogs, 'verbose');
     }
   }
   private writeLoggingMessageToConsole(message: any) {
     const { stdout } = process;
     stdout.write(message);
+  }
+
+  private recordLog(message: any, type: string) {
+    const logMessage = `[${new Date().toISOString()}] [${type}] ${message}\n`;
+    const logFilePath = `./logs/${type}.log`;
+
+    if (!fs.existsSync('./logs')) {
+      fs.mkdirSync('./logs', { recursive: true });
+    }
+
+    fs.appendFileSync(logFilePath, logMessage);
+
+    const stat = fs.statSync(logFilePath);
+    if (stat.size > this.sizeFileLogs * 1024) {
+      for (let i = 5; i > 0; i--) {
+        const oldFile = `./logs/${type}.log.${i}`;
+        const newerFile = i === 1 ? logFilePath : `./logs/${type}.log.${i - 1}`;
+        if (fs.existsSync(newerFile)) {
+          fs.renameSync(newerFile, oldFile);
+        }
+      }
+    }
   }
 }
