@@ -5,6 +5,7 @@ import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import 'dotenv/config';
 import { LoggingService } from './logging/logging.service';
+import { CustomExceptionFilter } from './filter/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,7 @@ async function bootstrap() {
 
   const logger = app.get(LoggingService);
   app.useLogger(logger);
+  app.useGlobalFilters(new CustomExceptionFilter(logger));
 
   logger.log('Server started.');
 
