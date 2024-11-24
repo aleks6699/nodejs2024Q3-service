@@ -21,7 +21,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "docker:start": "docker compose up --watch",
-    "docker:stop": "docker compose down",
+    "docker:stop": "docker compose down",    
     "docker:test": "docker scout cves aleks6699/rest-service",
     "prisma:init": "npx prisma generate && npx prisma migrate deploy"
 

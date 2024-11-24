@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   db:
-    image: postgres:17
+    image: aleks6699/rest-service-db:aleks-db
     container_name: home-library-db
     env_file: .env
     restart: always
@@ -26,7 +26,10 @@ services:
   app:
     build:
       context: .
+      dockerfile: Dockerfile   
+    # image: aleks6699/rest-service-app:aleks-app   
     container_name: home-library-app   
+
     env_file: .env
     restart: always
     volumes:
