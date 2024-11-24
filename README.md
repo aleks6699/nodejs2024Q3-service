@@ -27,10 +27,11 @@ Create an .env file with PORT (port on which the server will run; the default va
 npm run docker:start
  
 ```
-You can test docker
+You can test 
 
 ```
 npm run docker:test
+
 
 
 

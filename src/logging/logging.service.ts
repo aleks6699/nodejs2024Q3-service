@@ -1,5 +1,5 @@
 import { Injectable, LoggerService } from '@nestjs/common';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
 @Injectable()
 export class LoggingService implements LoggerService {
@@ -15,7 +15,7 @@ export class LoggingService implements LoggerService {
   private readonly currentLogLevel: number =
     parseInt(process.env.LOG_LEVEL, 10) || 0;
   private readonly sizeFileLogs: number =
-    parseInt(process.env.SIZE_FILE_LOGS, 10) || 0;
+    parseInt(process.env.LOG_FILE_SIZE, 10) || 0;
 
   private shouldLog(level: number): boolean {
     return level <= this.currentLogLevel;
@@ -75,23 +75,23 @@ export class LoggingService implements LoggerService {
 
   private recordLog(message: any, type: string) {
     const logMessage = `[${new Date().toISOString()}] [${type}] ${message}\n`;
-    const logFilePath = `./logs/${type}.log`;
+    const logDir = './logs';
+    const logFileBase = `${logDir}/${type}`;
 
-    if (!fs.existsSync('./logs')) {
-      fs.mkdirSync('./logs', { recursive: true });
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
+
+    let logFilePath = `${logFileBase}.log`;
+
+    if (fs.existsSync(logFilePath)) {
+      const stat = fs.statSync(logFilePath);
+      if (stat.size > this.sizeFileLogs * 1024) {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        logFilePath = `${logFileBase}-${timestamp}.log`;
+      }
     }
 
     fs.appendFileSync(logFilePath, logMessage);
-
-    const stat = fs.statSync(logFilePath);
-    if (stat.size > this.sizeFileLogs * 1024) {
-      for (let i = 5; i > 0; i--) {
-        const oldFile = `./logs/${type}.log.${i}`;
-        const newerFile = i === 1 ? logFilePath : `./logs/${type}.log.${i - 1}`;
-        if (fs.existsSync(newerFile)) {
-          fs.renameSync(newerFile, oldFile);
-        }
-      }
-    }
   }
 }

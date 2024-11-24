@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 4000
 
-CMD ["sh", "-c", "npm run prisma:init && npm run start"]
+CMD ["sh", "-c", "npm run prisma:init && npm run start:dev"]
