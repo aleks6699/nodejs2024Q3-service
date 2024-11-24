@@ -25,7 +25,8 @@ export class LoggingService implements LoggerService {
     console.log(this.currentLogLevel);
     console.log(this.shouldLog(this.logLevelPriority.LOG));
     if (this.shouldLog(this.logLevelPriority.LOG)) {
-      console.log(`[LOG] ${message}`);
+      const messageLogs = `[LOG] ${message}`;
+      this.writeLoggingMessageToConsole(messageLogs);
     }
   }
 
@@ -33,7 +34,8 @@ export class LoggingService implements LoggerService {
     console.log(this.shouldLog(this.logLevelPriority.LOG));
 
     if (this.shouldLog(this.logLevelPriority.FATAL)) {
-      console.error(`[FATAL] ${message}`);
+      const messageLogs = `[FATAL] ${message}`;
+      this.writeLoggingMessageToConsole(messageLogs);
     }
   }
 
@@ -41,7 +43,8 @@ export class LoggingService implements LoggerService {
     console.log(this.shouldLog(this.logLevelPriority.ERROR));
 
     if (this.shouldLog(this.logLevelPriority.ERROR)) {
-      console.error(`[ERROR] ${message}`);
+      const messageLogs = `[ERROR] ${message}`;
+      this.writeLoggingMessageToConsole(messageLogs);
     }
   }
 
@@ -49,7 +52,8 @@ export class LoggingService implements LoggerService {
     console.log(this.shouldLog(this.logLevelPriority.WARN));
 
     if (this.shouldLog(this.logLevelPriority.WARN)) {
-      console.warn(`[WARN] ${message}`);
+      const messageLogs = `[WARN] ${message}`;
+      this.writeLoggingMessageToConsole(messageLogs);
     }
   }
 
@@ -57,7 +61,8 @@ export class LoggingService implements LoggerService {
     console.log(this.shouldLog(this.logLevelPriority.DEBUG));
 
     if (this.shouldLog(this.logLevelPriority.DEBUG)) {
-      console.debug(`[DEBUG] ${message}`);
+      const messageLogs = `[DEBUG] ${message}`;
+      this.writeLoggingMessageToConsole(messageLogs);
     }
   }
 
@@ -65,7 +70,12 @@ export class LoggingService implements LoggerService {
     console.log(this.shouldLog(this.logLevelPriority.VERBOSE));
 
     if (this.shouldLog(this.logLevelPriority.VERBOSE)) {
-      console.info(`[VERBOSE] ${message}`);
+      const messageLogs = `[VERBOSE] ${message}`;
+      this.writeLoggingMessageToConsole(messageLogs);
     }
+  }
+  private writeLoggingMessageToConsole(message: any) {
+    const { stdout } = process;
+    stdout.write(message);
   }
 }
